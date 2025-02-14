@@ -22,11 +22,17 @@ struct FetchService {
         let fetchURL = quoteURL.appending(queryItems: [URLQueryItem(name: "production", value: show)])
         
         // Fetch data
+        let (data, response) = try await URLSession.shared.data(from: fetchURL)
         
         // Handle response
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw FetchError.badResponse
+        }
         
         // Decode data
+        let quote = try JSONDecoder().decode(Quote.self, from: data)
         
         // Return quote
+        return quote
     }
 }
