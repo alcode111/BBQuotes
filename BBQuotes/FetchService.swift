@@ -53,7 +53,7 @@ struct FetchService {
         return characters[0]
     }
     
-    func fetchDeath(from character: String) async throws -> Death? {
+    func fetchDeath(for character: String) async throws -> Death? {
         let deathURL = baseURL.appending(path: "deaths")
         
         let (data, response) = try await URLSession.shared.data(from: deathURL)
