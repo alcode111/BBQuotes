@@ -33,4 +33,20 @@ class ViewModel {
         let characterData = try! Data(contentsOf: Bundle.main.url(forResource: "samplecharacter", withExtension: "json")!)
         character = try! decoder.decode(Char.self, from: characterData)
     }
+    
+    func getData(for show: String) async {
+        status = .fetching
+        
+        do {
+            quote = try await fetcher.fetchQuote(from: show)
+            
+            character = try await fetcher.fetchCharacter(quote.character)
+            
+            character.death = try await fetcher.fetchDeath(from: character.name)
+            
+            status = .success
+        } catch {
+            status = .failed(error: error)
+        }
+    }
 }
